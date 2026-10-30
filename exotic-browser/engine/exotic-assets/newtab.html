@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-sharp="false">
+<html lang="en" data-theme="monochrome-dark" data-theme-variant="dark" data-sharp="false">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,8 +12,8 @@
       font-style: normal;
     }
 
-    :root,
-    html[data-theme="dark"] {
+    /* ── Monochrome Dark ── */
+    html[data-theme="monochrome-dark"][data-theme-variant="dark"] {
       --bg: #000000;
       --surface: #121212;
       --surface-hover: #1c1c1c;
@@ -27,8 +27,21 @@
       --r-sm: 8px;
       color-scheme: dark;
     }
+    html[data-theme="monochrome-dark"][data-theme-variant="light"] {
+      --bg: #f5f5f5;
+      --surface: #eaeaea;
+      --surface-hover: #dcdcdc;
+      --surface-pill: #dfdfdf;
+      --fg: #000000;
+      --fg-muted: #555555;
+      --fg-subtle: #828282;
+      --invert-bg: #000000;
+      --invert-fg: #ffffff;
+      color-scheme: light;
+    }
 
-    html[data-theme="light"] {
+    /* ── Monochrome Light ── */
+    html[data-theme="monochrome-light"][data-theme-variant="light"] {
       --bg: #ffffff;
       --surface: #f2f2f2;
       --surface-hover: #e7e7e7;
@@ -38,6 +51,130 @@
       --fg-subtle: #828282;
       --invert-bg: #000000;
       --invert-fg: #ffffff;
+      color-scheme: light;
+    }
+    html[data-theme="monochrome-light"][data-theme-variant="dark"] {
+      --bg: #0a0a0a;
+      --surface: #121212;
+      --surface-hover: #1c1c1c;
+      --surface-pill: #191919;
+      --fg: #ffffff;
+      --fg-muted: #9a9a9a;
+      --fg-subtle: #666666;
+      --invert-bg: #ffffff;
+      --invert-fg: #000000;
+      color-scheme: dark;
+    }
+
+    /* ── Ocean ── */
+    html[data-theme="ocean"][data-theme-variant="dark"] {
+      --bg: #0f4c75;
+      --surface: #16324f;
+      --surface-hover: #1e3a5f;
+      --surface-pill: #1b3959;
+      --fg: #e8f1f5;
+      --fg-muted: #a8c3d9;
+      --fg-subtle: #6e8ea0;
+      --invert-bg: #e8f1f5;
+      --invert-fg: #0f4c75;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: dark;
+    }
+    html[data-theme="ocean"][data-theme-variant="light"] {
+      --bg: #e8f1f5;
+      --surface: #c9e3ee;
+      --surface-hover: #b8d8e6;
+      --surface-pill: #c2dded;
+      --fg: #0f4c75;
+      --fg-muted: #4a7a9e;
+      --fg-subtle: #7a9fb3;
+      --invert-bg: #0f4c75;
+      --invert-fg: #e8f1f5;
+      color-scheme: light;
+    }
+
+    /* ── Sunset ── */
+    html[data-theme="sunset"][data-theme-variant="light"] {
+      --bg: #fdfbfb;
+      --surface: #ead2ac;
+      --surface-hover: #dec994;
+      --surface-pill: #e5cb9e;
+      --fg: #c06c84;
+      --fg-muted: #a05c6f;
+      --fg-subtle: #b08e99;
+      --invert-bg: #c06c84;
+      --invert-fg: #fdfbfb;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: light;
+    }
+    html[data-theme="sunset"][data-theme-variant="dark"] {
+      --bg: #c06c84;
+      --surface: #a64d79;
+      --surface-hover: #9a3d6d;
+      --surface-pill: #9e4370;
+      --fg: #fdfbfb;
+      --fg-muted: #ead2ac;
+      --fg-subtle: #c0a080;
+      --invert-bg: #fdfbfb;
+      --invert-fg: #c06c84;
+      color-scheme: dark;
+    }
+
+    /* ── Forest ── */
+    html[data-theme="forest"][data-theme-variant="dark"] {
+      --bg: #1b4332;
+      --surface: #2d6a4f;
+      --surface-hover: #3a845e;
+      --surface-pill: #337556;
+      --fg: #d8f3dc;
+      --fg-muted: #a8d8b9;
+      --fg-subtle: #7aa889;
+      --invert-bg: #d8f3dc;
+      --invert-fg: #1b4332;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: dark;
+    }
+    html[data-theme="forest"][data-theme-variant="light"] {
+      --bg: #d8f3dc;
+      --surface: #b9e3ca;
+      --surface-hover: #a9d8be;
+      --surface-pill: #b2dcb8;
+      --fg: #1b4332;
+      --fg-muted: #4a7a66;
+      --fg-subtle: #7a9b89;
+      --invert-bg: #1b4332;
+      --invert-fg: #d8f3dc;
+      color-scheme: light;
+    }
+
+    /* ── Midnight ── */
+    html[data-theme="midnight"][data-theme-variant="dark"] {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --surface-pill: #263348;
+      --fg: #f8fafc;
+      --fg-muted: #94a3b8;
+      --fg-subtle: #64748b;
+      --invert-bg: #f8fafc;
+      --invert-fg: #0f172a;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: dark;
+    }
+    html[data-theme="midnight"][data-theme-variant="light"] {
+      --bg: #f8fafc;
+      --surface: #e2e8f0;
+      --surface-hover: #cbd5e1;
+      --surface-pill: #d8dee6;
+      --fg: #0f172a;
+      --fg-muted: #64748b;
+      --fg-subtle: #94a3b8;
+      --invert-bg: #0f172a;
+      --invert-fg: #f8fafc;
       color-scheme: light;
     }
 
@@ -360,19 +497,50 @@
       const btnLight = document.getElementById("btn-light");
       const btnMods = document.getElementById("btn-mods");
 
+      const THEMES = ["monochrome-dark", "monochrome-light", "ocean", "sunset", "forest", "midnight"];
+      const DARK_THEMES = ["monochrome-dark", "ocean", "forest", "midnight"];
+      const LIGHT_THEMES = ["monochrome-light", "sunset"];
+
+      function isDarkTheme(name) {
+        return DARK_THEMES.includes(name);
+      }
+
+      function variantFor(theme, wantDark) {
+        if (wantDark) {
+          return DARK_THEMES.includes(theme) ? theme : (LIGHT_THEMES.includes(theme) ? theme + "-dark" : theme);
+        }
+        return LIGHT_THEMES.includes(theme) ? theme : (DARK_THEMES.includes(theme) ? theme + "-light" : theme);
+      }
+
+      function resolveTheme() {
+        const stored = root.getAttribute("data-theme") || "monochrome-dark";
+        const variant = root.getAttribute("data-theme-variant") || (isDarkTheme(stored) ? "dark" : "light");
+        return { theme: stored, variant: variant };
+      }
+
       function syncThemeButtons() {
-        const mode = root.getAttribute("data-theme") || "dark";
-        btnDark.setAttribute("data-active", mode === "dark" ? "true" : "false");
-        btnLight.setAttribute("data-active", mode === "light" ? "true" : "false");
+        const { variant } = resolveTheme();
+        btnDark.setAttribute("data-active", variant === "dark" ? "true" : "false");
+        btnLight.setAttribute("data-active", variant === "light" ? "true" : "false");
       }
 
       const obs = new MutationObserver(syncThemeButtons);
-      obs.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+      obs.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-theme-variant"] });
 
       const mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
       function syncFromSystemScheme() {
         if (!mq || root.getAttribute("data-exotic-managed") === "true") return;
-        root.setAttribute("data-theme", mq.matches ? "light" : "dark");
+        const wantLight = mq.matches;
+        const { theme } = resolveTheme();
+        const nextVariant = wantLight ? "light" : "dark";
+        root.setAttribute("data-theme-variant", nextVariant);
+        if (wantLight && DARK_THEMES.includes(theme)) {
+          const lightAlt = { "monochrome-dark": "monochrome-light", "ocean": "ocean-light", "forest": "forest-light", "midnight": "midnight-light" }[theme];
+          if (lightAlt) root.setAttribute("data-theme", lightAlt);
+        } else if (!wantLight && LIGHT_THEMES.includes(theme)) {
+          const darkAlt = { "monochrome-light": "monochrome-dark", "sunset": "sunset-dark" }[theme];
+          if (darkAlt) root.setAttribute("data-theme", darkAlt);
+        }
         syncThemeButtons();
       }
       if (mq) {
@@ -381,14 +549,28 @@
       }
       syncThemeButtons();
 
-      function requestTheme(mode) {
-        root.setAttribute("data-theme", mode);
+      function applyTheme(themeName, variant) {
+        root.setAttribute("data-theme", themeName);
+        root.setAttribute("data-theme-variant", variant);
         syncThemeButtons();
-        window.dispatchEvent(new CustomEvent("ExoticSetTheme", { detail: mode, bubbles: true }));
+        window.dispatchEvent(new CustomEvent("ExoticSetTheme", {
+          detail: themeName,
+          bubbles: true
+        }));
+        window.dispatchEvent(new CustomEvent("ExoticSetThemeVariant", {
+          detail: variant,
+          bubbles: true
+        }));
       }
 
-      btnDark.addEventListener("click", () => requestTheme("dark"));
-      btnLight.addEventListener("click", () => requestTheme("light"));
+      btnDark.addEventListener("click", () => {
+        const { theme } = resolveTheme();
+        applyTheme(theme, "dark");
+      });
+      btnLight.addEventListener("click", () => {
+        const { theme } = resolveTheme();
+        applyTheme(theme, "light");
+      });
       btnMods.addEventListener("click", () => {
         window.dispatchEvent(new CustomEvent("ExoticOpenMods", { bubbles: true }));
       });

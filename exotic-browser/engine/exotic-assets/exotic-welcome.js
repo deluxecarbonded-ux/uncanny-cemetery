@@ -329,18 +329,19 @@
     doc.documentElement.setAttribute("data-exotic-welcome", "active");
 
     const stepperWrap = h("div", { className: "ew-stepper" });
-    const quickThemeBtn = h(
-      "button",
-      {
-        className: "ew-theme-quick",
-        type: "button",
-        onClick: () => {
-          ctrl.toggleTheme();
-          renderStage(false);
+      const DARK_THEMES = ["monochrome-dark", "ocean", "forest", "midnight"];
+      const quickThemeBtn = h(
+        "button",
+        {
+          className: "ew-theme-quick",
+          type: "button",
+          onClick: () => {
+            ctrl.toggleTheme();
+            renderStage(false);
+          },
         },
-      },
-      ctrl.getThemeMode() === "dark" ? "Light" : "Dark"
-    );
+        DARK_THEMES.includes(ctrl.getThemeMode()) ? "Light" : "Dark"
+      );
 
     const titlebar = h(
       "div",
@@ -559,7 +560,8 @@
       const themeMode = ctrl.getThemeMode();
       const layoutId = getLayoutId();
       const syncWeb = getBoolPref("exotic.mods.syncWebsiteTheme", false);
-      const webDark = syncWeb ? themeMode === "dark" : false;
+      const isDarkThemeMode = ["monochrome-dark", "ocean", "forest", "midnight"].includes(themeMode);
+      const webDark = syncWeb ? isDarkThemeMode : false;
 
       previewWindow.setAttribute("data-layout", layoutId);
       previewWindow.setAttribute("data-step", String(step));
@@ -580,7 +582,7 @@
           importMode === "import"
             ? "Importing saved bookmarks, history, and passwords into Exotic."
             : "Starting with a clean Exotic profile.",
-        2: `${themeMode === "dark" ? "Dark" : "Light"} interface${
+        2: `${isDarkThemeMode ? "Dark" : "Light"} interface${
           syncWeb ? " · Website light and dark mode enabled" : ""
         }`,
         3:
@@ -752,6 +754,14 @@
       }
 
       if (step === 2) {
+        const themeTiles = [
+          { id: "monochrome-dark", label: "Monochrome Dark", sub: "Black (#000000)", variant: "dark", color: "#0a0a0a", page: "#000000" },
+          { id: "monochrome-light", label: "Monochrome Light", sub: "White (#FFFFFF)", variant: "light", color: "#ededed", page: "#ffffff" },
+          { id: "ocean", label: "Ocean", sub: "Deep teal · dark", variant: "dark", color: "#16324f", page: "#0f4c75" },
+          { id: "sunset", label: "Sunset", sub: "Warm orange · light", variant: "light", color: "#ead2ac", page: "#fdfbfb" },
+          { id: "forest", label: "Forest", sub: "Rich greens · dark", variant: "dark", color: "#2d6a4f", page: "#1b4332" },
+          { id: "midnight", label: "Midnight", sub: "Navy slate · dark", variant: "dark", color: "#1e293b", page: "#0f172a" },
+        ];
         return h(
           "div",
           null,
@@ -760,48 +770,32 @@
           h(
             "p",
             { className: "ew-step-desc" },
-            "Pick Dark or Light mode for Exotic's sidebar and interface. External websites keep their original colors, images, and logos untouched."
+            "Pick your Exotic interface theme. External websites keep their original colors untouched."
           ),
           h(
             "div",
-            { className: "ew-grid-2" },
-            h(
-              "button",
-              {
-                className: "ew-theme-tile",
-                type: "button",
-                "data-selected": themeMode === "dark" ? "true" : "false",
-                onClick: () => {
-                  ctrl.applyTheme("dark");
-                  renderStage(false);
-                },
-              },
+            { className: "ew-grid-3" },
+            ...themeTiles.map((t) =>
               h(
-                "div",
-                { className: "ew-theme-swatch ew-theme-swatch-dark" },
-                h("div", { className: "ew-swatch-rail-dark" }),
-                h("div", { className: "ew-swatch-page-dark" })
-              ),
-              h("div", { className: "ew-card-title" }, "Dark (#000000)")
-            ),
-            h(
-              "button",
-              {
-                className: "ew-theme-tile",
-                type: "button",
-                "data-selected": themeMode === "light" ? "true" : "false",
-                onClick: () => {
-                  ctrl.applyTheme("light");
-                  renderStage(false);
+                "button",
+                {
+                  className: "ew-theme-tile",
+                  type: "button",
+                  "data-selected": themeMode === t.id ? "true" : "false",
+                  onClick: () => {
+                    ctrl.applyTheme(t.id);
+                    renderStage(false);
+                  },
                 },
-              },
-              h(
-                "div",
-                { className: "ew-theme-swatch ew-theme-swatch-light" },
-                h("div", { className: "ew-swatch-rail-light" }),
-                h("div", { className: "ew-swatch-page-light" })
-              ),
-              h("div", { className: "ew-card-title" }, "Light (#FFFFFF)")
+                h(
+                  "div",
+                  { className: "ew-theme-swatch", style: { backgroundColor: t.color } },
+                  h("div", { className: "ew-swatch-rail", style: { backgroundColor: t.variant === "dark" ? "#1c1c1c" : "#d8d8d8" } }),
+                  h("div", { className: "ew-swatch-page", style: { backgroundColor: t.page } })
+                ),
+                h("div", { className: "ew-card-title" }, t.label),
+                h("div", { className: "ew-card-sub" }, t.sub + " · " + t.variant)
+              )
             )
           ),
           h(
@@ -1072,7 +1066,8 @@
 
     function renderStage(animateStepChange) {
       const mode = ctrl.getThemeMode();
-      quickThemeBtn.textContent = mode === "dark" ? "Light" : "Dark";
+      const DARK_THEMES = ["monochrome-dark", "ocean", "forest", "midnight"];
+      quickThemeBtn.textContent = DARK_THEMES.includes(mode) ? "Light" : "Dark";
       overlay.setAttribute("data-step", String(step));
 
       stepperWrap.replaceChildren(

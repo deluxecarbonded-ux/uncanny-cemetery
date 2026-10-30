@@ -1621,36 +1621,14 @@ panel {
   gap: 6px;
 }
 
-.ew-theme-swatch-dark {
-  background-color: #0a0a0a;
-}
-
-.ew-theme-swatch-light {
-  background-color: #ededed;
-}
-
-.ew-swatch-rail-dark {
+.ew-swatch-rail {
   width: 26%;
   border-radius: 5px;
-  background-color: #1c1c1c;
 }
 
-.ew-swatch-page-dark {
+.ew-swatch-page {
   flex: 1;
   border-radius: 5px;
-  background-color: #000000;
-}
-
-.ew-swatch-rail-light {
-  width: 26%;
-  border-radius: 5px;
-  background-color: #d8d8d8;
-}
-
-.ew-swatch-page-light {
-  flex: 1;
-  border-radius: 5px;
-  background-color: #ffffff;
 }
 
 .ew-pin-choice {
