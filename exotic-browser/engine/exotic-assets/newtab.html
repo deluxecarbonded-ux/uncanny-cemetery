@@ -490,32 +490,20 @@
     <div class="nt-spacer"></div>
   </main>
 
-  <script>
+    <script>
     (function () {
       const root = document.documentElement;
       const btnDark = document.getElementById("btn-dark");
       const btnLight = document.getElementById("btn-light");
       const btnMods = document.getElementById("btn-mods");
 
-      const THEMES = ["monochrome-dark", "monochrome-light", "ocean", "sunset", "forest", "midnight"];
       const DARK_THEMES = ["monochrome-dark", "ocean", "forest", "midnight"];
       const LIGHT_THEMES = ["monochrome-light", "sunset"];
 
-      function isDarkTheme(name) {
-        return DARK_THEMES.includes(name);
-      }
-
-      function variantFor(theme, wantDark) {
-        if (wantDark) {
-          return DARK_THEMES.includes(theme) ? theme : (LIGHT_THEMES.includes(theme) ? theme + "-dark" : theme);
-        }
-        return LIGHT_THEMES.includes(theme) ? theme : (DARK_THEMES.includes(theme) ? theme + "-light" : theme);
-      }
-
       function resolveTheme() {
-        const stored = root.getAttribute("data-theme") || "monochrome-dark";
-        const variant = root.getAttribute("data-theme-variant") || (isDarkTheme(stored) ? "dark" : "light");
-        return { theme: stored, variant: variant };
+        const theme = root.getAttribute("data-theme") || "monochrome-dark";
+        const variant = root.getAttribute("data-theme-variant") || (DARK_THEMES.includes(theme) ? "dark" : "light");
+        return { theme, variant };
       }
 
       function syncThemeButtons() {
@@ -525,22 +513,27 @@
       }
 
       const obs = new MutationObserver(syncThemeButtons);
-      obs.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-theme-variant"] });
+      obs.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-theme-variant", "data-exotic-theme", "data-exotic-theme-variant"] });
+
+      // Sync actor-set data-exotic-theme/* attributes to data-theme/* used by CSS
+      function syncFromActor() {
+        const exTheme = root.getAttribute("data-exotic-theme");
+        const exVariant = root.getAttribute("data-exotic-theme-variant");
+        if (exTheme) root.setAttribute("data-theme", exTheme);
+        if (exVariant) root.setAttribute("data-theme-variant", exVariant);
+        syncThemeButtons();
+      }
+
+      const obs2 = new MutationObserver(syncFromActor);
+      obs2.observe(root, { attributes: true, attributeFilter: ["data-exotic-theme", "data-exotic-theme-variant"] });
+
+      syncFromActor();
 
       const mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
       function syncFromSystemScheme() {
         if (!mq || root.getAttribute("data-exotic-managed") === "true") return;
         const wantLight = mq.matches;
-        const { theme } = resolveTheme();
-        const nextVariant = wantLight ? "light" : "dark";
-        root.setAttribute("data-theme-variant", nextVariant);
-        if (wantLight && DARK_THEMES.includes(theme)) {
-          const lightAlt = { "monochrome-dark": "monochrome-light", "ocean": "ocean-light", "forest": "forest-light", "midnight": "midnight-light" }[theme];
-          if (lightAlt) root.setAttribute("data-theme", lightAlt);
-        } else if (!wantLight && LIGHT_THEMES.includes(theme)) {
-          const darkAlt = { "monochrome-light": "monochrome-dark", "sunset": "sunset-dark" }[theme];
-          if (darkAlt) root.setAttribute("data-theme", darkAlt);
-        }
+        root.setAttribute("data-theme-variant", wantLight ? "light" : "dark");
         syncThemeButtons();
       }
       if (mq) {
@@ -562,6 +555,22 @@
           bubbles: true
         }));
       }
+
+      // Listen for theme changes from the browser shell
+      window.addEventListener("ExoticSetTheme", (e) => {
+        if (e.target === window) return; // ignore our own dispatches
+        const themeName = e.detail;
+        const { variant } = resolveTheme();
+        root.setAttribute("data-theme", themeName);
+        syncThemeButtons();
+      }, true);
+
+      window.addEventListener("ExoticSetThemeVariant", (e) => {
+        if (e.target === window) return; // ignore our own dispatches
+        const variant = e.detail;
+        root.setAttribute("data-theme-variant", variant);
+        syncThemeButtons();
+      }, true);
 
       btnDark.addEventListener("click", () => {
         const { theme } = resolveTheme();

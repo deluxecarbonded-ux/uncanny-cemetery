@@ -116,8 +116,18 @@
     return getPrefStr("exotic.theme.mode", "monochrome-dark");
   }
 
+  function getThemeVariant() {
+    const theme = getTheme();
+    const darkThemes = ["monochrome-dark", "ocean", "forest", "midnight"];
+    const lightThemes = ["monochrome-light", "sunset"];
+    if (darkThemes.includes(theme)) return "dark";
+    if (lightThemes.includes(theme)) return "light";
+    return "dark";
+  }
+
   function syncDocTokens() {
     doc.documentElement.setAttribute("data-exotic-theme", getTheme());
+    doc.documentElement.setAttribute("data-exotic-theme-variant", getThemeVariant());
     doc.documentElement.setAttribute(
       "data-exotic-sharp",
       getPrefBool("exotic.mods.sharpGeometry", false) ? "true" : "false"
@@ -141,7 +151,7 @@
     }
 
     :root,
-    html[data-exotic-theme="dark"] {
+    html[data-exotic-theme="monochrome-dark"] {
       --bg: #000000;
       --rail: #0a0a0a;
       --card: #131313;
@@ -156,8 +166,7 @@
       --r-sm: 8px;
       color-scheme: dark;
     }
-
-    html[data-exotic-theme="light"] {
+    html[data-exotic-theme="monochrome-light"] {
       --bg: #ffffff;
       --rail: #f3f3f3;
       --card: #f0f0f0;
@@ -168,6 +177,122 @@
       --fg-subtle: #7f7f7f;
       --inv-bg: #000000;
       --inv-fg: #ffffff;
+      color-scheme: light;
+    }
+    html[data-exotic-theme="ocean"][data-exotic-theme-variant="dark"],
+    html[data-exotic-theme="ocean"] {
+      --bg: #0f4c75;
+      --rail: #16324f;
+      --card: #1e3a5f;
+      --card-2: #2a4a7f;
+      --card-3: #3a5a8f;
+      --fg: #e8f1f5;
+      --fg-muted: #a8c3d9;
+      --fg-subtle: #6e8ea0;
+      --inv-bg: #e8f1f5;
+      --inv-fg: #0f4c75;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: dark;
+    }
+    html[data-exotic-theme="ocean"][data-exotic-theme-variant="light"] {
+      --bg: #e8f1f5;
+      --rail: #c9e3ee;
+      --card: #b8d8e6;
+      --card-2: #c2dded;
+      --card-3: #cfe6ef;
+      --fg: #0f4c75;
+      --fg-muted: #4a7a9e;
+      --fg-subtle: #7a9fb3;
+      --inv-bg: #0f4c75;
+      --inv-fg: #e8f1f5;
+      color-scheme: light;
+    }
+    html[data-exotic-theme="sunset"][data-exotic-theme-variant="light"],
+    html[data-exotic-theme="sunset"] {
+      --bg: #fdfbfb;
+      --rail: #ead2ac;
+      --card: #dec994;
+      --card-2: #e5cb9e;
+      --card-3: #ecd6ad;
+      --fg: #c06c84;
+      --fg-muted: #a05c6f;
+      --fg-subtle: #b08e99;
+      --inv-bg: #c06c84;
+      --inv-fg: #fdfbfb;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: light;
+    }
+    html[data-exotic-theme="sunset"][data-exotic-theme-variant="dark"] {
+      --bg: #c06c84;
+      --rail: #a64d79;
+      --card: #9a3d6d;
+      --card-2: #9e4370;
+      --card-3: #aa507a;
+      --fg: #fdfbfb;
+      --fg-muted: #ead2ac;
+      --fg-subtle: #c0a080;
+      --inv-bg: #fdfbfb;
+      --inv-fg: #c06c84;
+      color-scheme: dark;
+    }
+    html[data-exotic-theme="forest"][data-exotic-theme-variant="dark"],
+    html[data-exotic-theme="forest"] {
+      --bg: #1b4332;
+      --rail: #2d6a4f;
+      --card: #3a845e;
+      --card-2: #44bd32;
+      --card-3: #4fa06c;
+      --fg: #d8f3dc;
+      --fg-muted: #a8d8b9;
+      --fg-subtle: #7aa889;
+      --inv-bg: #d8f3dc;
+      --inv-fg: #1b4332;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: dark;
+    }
+    html[data-exotic-theme="forest"][data-exotic-theme-variant="light"] {
+      --bg: #d8f3dc;
+      --rail: #b9e3ca;
+      --card: #a9d8be;
+      --card-2: #b2dcb8;
+      --card-3: #bbe1c3;
+      --fg: #1b4332;
+      --fg-muted: #4a7a66;
+      --fg-subtle: #7a9b89;
+      --inv-bg: #1b4332;
+      --inv-fg: #d8f3dc;
+      color-scheme: light;
+    }
+    html[data-exotic-theme="midnight"][data-exotic-theme-variant="dark"],
+    html[data-exotic-theme="midnight"] {
+      --bg: #0f172a;
+      --rail: #1e293b;
+      --card: #334155;
+      --card-2: #475569;
+      --card-3: #5c6b84;
+      --fg: #f8fafc;
+      --fg-muted: #94a3b8;
+      --fg-subtle: #64748b;
+      --inv-bg: #f8fafc;
+      --inv-fg: #0f172a;
+      --r: 12px;
+      --r-sm: 8px;
+      color-scheme: dark;
+    }
+    html[data-exotic-theme="midnight"][data-exotic-theme-variant="light"] {
+      --bg: #f8fafc;
+      --rail: #e2e8f0;
+      --card: #cbd5e1;
+      --card-2: #d8dee6;
+      --card-3: #e2e6ef;
+      --fg: #0f172a;
+      --fg-muted: #64748b;
+      --fg-subtle: #94a3b8;
+      --inv-bg: #0f172a;
+      --inv-fg: #f8fafc;
       color-scheme: light;
     }
 
@@ -825,6 +950,44 @@
         themeCard("sunset", "Sunset", "Warm orange & purple glow"),
         themeCard("forest", "Forest", "Rich greens & earth tones"),
         themeCard("midnight", "Midnight", "Navy blue & slate"),
+      ),
+      h("div", { className: "es-grid-2" },
+        h(
+          "button",
+          {
+            className: "es-layout-card",
+            type: "button",
+            "data-active": getThemeVariant() === "dark" ? "true" : "false",
+            onClick: () => {
+              const c = getTopCtrl();
+              const cur = getTheme();
+              if (c) c.applyTheme(cur);
+              else setPrefStr("exotic.theme.mode", cur);
+              syncDocTokens();
+              renderActiveSection();
+            },
+          },
+          h("div", { className: "es-layout-title" }, "Dark variant"),
+          h("div", { className: "es-layout-sub" }, "Dark style for current theme")
+        ),
+        h(
+          "button",
+          {
+            className: "es-layout-card",
+            type: "button",
+            "data-active": getThemeVariant() === "light" ? "true" : "false",
+            onClick: () => {
+              const c = getTopCtrl();
+              const cur = getTheme();
+              if (c) c.applyTheme(cur);
+              else setPrefStr("exotic.theme.mode", cur);
+              syncDocTokens();
+              renderActiveSection();
+            },
+          },
+          h("div", { className: "es-layout-title" }, "Light variant"),
+          h("div", { className: "es-layout-sub" }, "Light style for current theme")
+        )
       ),
       h("div", { className: "es-section-lbl" }, "Interface"),
       h(

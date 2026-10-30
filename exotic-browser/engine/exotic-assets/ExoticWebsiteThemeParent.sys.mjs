@@ -19,6 +19,8 @@ export class ExoticWebsiteThemeParent extends JSWindowActorParent {
         if (ctrl && typeof ctrl.applyTheme === "function") {
           ctrl.applyTheme(mode);
         }
+      } else if (msg.name === "Exotic:SyncInternalPage") {
+        this.sendAsyncMessage("Exotic:SyncInternalPage", msg.data || {});
       } else if (msg.name === "Exotic:NewTabOpenMods") {
         if (chromeWin && typeof chromeWin.__exoticOpenSettingsSection === "function") {
           chromeWin.__exoticOpenSettingsSection("mods");

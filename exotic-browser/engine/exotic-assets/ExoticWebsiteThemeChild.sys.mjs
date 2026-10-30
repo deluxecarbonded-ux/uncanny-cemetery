@@ -472,10 +472,12 @@ export class ExoticWebsiteThemeChild extends JSWindowActorChild {
     if (!html) {
       return;
     }
-    const mode = state.uiTheme === "light" ? "light" : "dark";
+    const theme = state.uiTheme || "monochrome-dark";
+    const variant = state.uiVariant || (["monochrome-dark", "ocean", "forest", "midnight"].includes(theme) ? "dark" : "light");
     const sharp = state.sharp ? "true" : "false";
     try {
-      html.setAttribute("data-exotic-theme", mode);
+      html.setAttribute("data-exotic-theme", theme);
+      html.setAttribute("data-exotic-theme-variant", variant);
       html.setAttribute("data-exotic-sharp", sharp);
     } catch (_) {}
   }

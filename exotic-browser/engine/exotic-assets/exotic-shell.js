@@ -1800,6 +1800,7 @@
 
   function syncShellState() {
     const mode = ctrl.getThemeMode();
+    const variant = ctrl.getThemeVariant ? ctrl.getThemeVariant() : "dark";
     let sidebarMode = "expanded";
     let compact = false;
     let rounded = true;
@@ -1816,13 +1817,14 @@
     } catch (_) {}
 
     doc.documentElement.setAttribute("exotic-theme", mode);
+    doc.documentElement.setAttribute("exotic-theme-variant", variant);
     doc.documentElement.setAttribute("exotic-sidebar-mode", sidebarMode);
     doc.documentElement.setAttribute("exotic-compact", compact ? "true" : "false");
     doc.documentElement.setAttribute("exotic-rounded", rounded && !sharp ? "true" : "false");
     doc.documentElement.setAttribute("exotic-sharp", sharp ? "true" : "false");
     doc.documentElement.setAttribute("exotic-ghost-tabs", ghostTabs ? "true" : "false");
 
-    topThemeBtn.textContent = mode === "monochrome-light" || mode === "sunset" ? "Dark" : "Light";
+    topThemeBtn.textContent = variant === "light" ? "Dark" : "Light";
     topSplitBtn.setAttribute("data-active", splitViewActive ? "true" : "false");
     topCompactBtn.setAttribute("data-active", compact ? "true" : "false");
 
