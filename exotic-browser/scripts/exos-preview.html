@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ExOS preview harness</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #000;
+        font-family: system-ui, sans-serif;
+      }
+      .ph {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        color: #8e877d;
+        font-size: 14px;
+      }
+      .ph button {
+        height: 34px;
+        padding: 0 18px;
+        border: 1px solid #2a2a2a;
+        background: #111;
+        color: #f1ebe1;
+        border-radius: 8px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .err {
+        color: #ff7b6b;
+        max-width: 70ch;
+        white-space: pre-wrap;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ph">
+      <div>ExOS preview harness — loads the real mod script outside Exotic.</div>
+      <button id="boot" type="button">Boot ExOS</button>
+      <div class="err" id="err"></div>
+    </div>
+    <script src="../engine/exotic-assets/exotic-os.js"></script>
+    <script>
+      (function () {
+        var os = window.__exoticOS;
+        var err = document.getElementById("err");
+        if (!os) {
+          err.textContent = "window.__exoticOS was not defined — exotic-os.js failed to load.";
+          return;
+        }
+        document.getElementById("boot").addEventListener("click", function () {
+          os.open();
+        });
+        try {
+          os.open();
+        } catch (e) {
+          err.textContent = "Boot failed: " + (e && e.stack ? e.stack : e);
+        }
+      })();
+    </script>
+  </body>
+</html>

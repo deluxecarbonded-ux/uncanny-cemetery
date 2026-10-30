@@ -1,0 +1,7 @@
+# Large build artifacts — excluded from Git (GitHub 100MB limit)
+exotic-browser/bin/Exotic.exe
+exotic-browser/releases/Exotic-Win11-Setup-x64.exe
+exotic-browser/releases/Exotic-Win11-LauncherKit.zip
+
+# OS
+.sudo_as_admin_successful

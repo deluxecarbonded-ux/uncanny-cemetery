@@ -1,0 +1,2 @@
+5d0837a5c5b475a751036ba4913bfeaedf0f672bf8c11bc39017a810faba3d10  Exotic-Win11-Setup-x64.exe
+c65e2c60f720c6708b5750599f3ba55f7d2a982a07faaff472926f6749ba4e4b  Exotic-Win11-LauncherKit.zip

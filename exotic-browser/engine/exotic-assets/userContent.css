@@ -1,0 +1,195 @@
+/* ==========================================================================
+   Exotic Browser — Internal Content Stylesheet (userContent.css)
+   Scoped strictly to Exotic internal pages (about:preferences,
+   about:privatebrowsing, about:neterror). Never touches web pages,
+   about:blank frames, or about:srcdoc iframes on external websites.
+   ========================================================================== */
+
+@-moz-document url-prefix("about:preferences"),
+               url-prefix("about:privatebrowsing"),
+               url-prefix("about:neterror") {
+  @font-face {
+    font-family: "Exotic Sans";
+    src: url("resource://exotic-assets/exotic-sans-regular.otf") format("opentype");
+    font-weight: 100 900;
+    font-style: normal;
+  }
+  html,
+  body {
+    background: #000000 !important;
+    background-image: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  @media (prefers-color-scheme: light) {
+    html:not([data-exotic-theme="dark"]),
+    html:not([data-exotic-theme="dark"]) body {
+      background: #ffffff !important;
+    }
+  }
+
+  html[data-exotic-theme="light"],
+  html[data-exotic-theme="light"] body {
+    background: #ffffff !important;
+  }
+
+  body > *:not(#exotic-settings-root):not(#exotic-page-root) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    font-family: "Exotic Sans", "Segoe UI", Arial, sans-serif !important;
+    font-weight: 400 !important;
+    font-synthesis: none !important;
+    letter-spacing: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
+  #exotic-page-root {
+    --ep-bg: #000000;
+    --ep-surface: #121212;
+    --ep-surface-alt: #1b1b1b;
+    --ep-fg: #ffffff;
+    --ep-muted: #989898;
+    --ep-inv-bg: #ffffff;
+    --ep-inv-fg: #000000;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483640 !important;
+    background-color: var(--ep-bg) !important;
+    color: var(--ep-fg) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 32px !important;
+    user-select: none;
+  }
+
+  @media (prefers-color-scheme: light) {
+    html:not([data-exotic-theme="dark"]) #exotic-page-root {
+      --ep-bg: #ffffff;
+      --ep-surface: #f2f2f2;
+      --ep-surface-alt: #e6e6e6;
+      --ep-fg: #000000;
+      --ep-muted: #585858;
+      --ep-inv-bg: #000000;
+      --ep-inv-fg: #ffffff;
+    }
+  }
+
+  html[data-exotic-theme="light"] #exotic-page-root {
+    --ep-bg: #ffffff;
+    --ep-surface: #f2f2f2;
+    --ep-surface-alt: #e6e6e6;
+    --ep-fg: #000000;
+    --ep-muted: #585858;
+    --ep-inv-bg: #000000;
+    --ep-inv-fg: #ffffff;
+  }
+
+  #exotic-page-root * {
+    box-sizing: border-box !important;
+  }
+
+  #exotic-page-root .ep-shell {
+    width: 100% !important;
+    max-width: 640px !important;
+    background-color: var(--ep-surface) !important;
+    border-radius: 14px !important;
+    padding: 36px 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 22px !important;
+  }
+
+  #exotic-page-root .ep-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  #exotic-page-root .ep-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    color: var(--ep-fg) !important;
+  }
+
+  #exotic-page-root .ep-pill {
+    padding: 5px 12px !important;
+    border-radius: 7px !important;
+    background-color: var(--ep-surface-alt) !important;
+    color: var(--ep-muted) !important;
+    font-size: 12px !important;
+  }
+
+  #exotic-page-root .ep-title {
+    font-size: 24px !important;
+    margin: 0 !important;
+    color: var(--ep-fg) !important;
+  }
+
+  #exotic-page-root .ep-desc {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    color: var(--ep-muted) !important;
+    margin: 8px 0 0 !important;
+  }
+
+  #exotic-page-root .ep-form {
+    display: flex !important;
+    gap: 8px !important;
+    padding: 7px 7px 7px 16px !important;
+    background-color: var(--ep-surface-alt) !important;
+    border-radius: 10px !important;
+    align-items: center !important;
+  }
+
+  #exotic-page-root input,
+  #exotic-page-root button {
+    appearance: none !important;
+    -moz-appearance: none !important;
+  }
+
+  #exotic-page-root .ep-input {
+    flex: 1 !important;
+    height: 34px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: var(--ep-fg) !important;
+    font-size: 14px !important;
+  }
+
+  #exotic-page-root .ep-input::placeholder {
+    color: var(--ep-muted) !important;
+  }
+
+  #exotic-page-root .ep-actions {
+    display: flex !important;
+    gap: 10px !important;
+  }
+
+  #exotic-page-root .ep-btn {
+    height: 34px !important;
+    padding: 0 16px !important;
+    border-radius: 8px !important;
+    background-color: var(--ep-inv-bg) !important;
+    color: var(--ep-inv-fg) !important;
+    font-size: 12.5px !important;
+    cursor: pointer !important;
+  }
+
+  #exotic-page-root .ep-btn-tonal {
+    background-color: var(--ep-surface-alt) !important;
+    color: var(--ep-fg) !important;
+  }
+}
