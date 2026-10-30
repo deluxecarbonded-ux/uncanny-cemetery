@@ -113,7 +113,7 @@
   }
 
   function getTheme() {
-    return getPrefStr("exotic.theme.mode", "dark") === "light" ? "light" : "dark";
+    return getPrefStr("exotic.theme.mode", "monochrome-dark");
   }
 
   function syncDocTokens() {
@@ -752,6 +752,25 @@
         h("div", { className: "es-layout-sub" }, sub)
       );
 
+    const themeCard = (id, title, sub) =>
+      h(
+        "button",
+        {
+          className: "es-layout-card",
+          type: "button",
+          "data-active": theme === id ? "true" : "false",
+          onClick: () => {
+            const c = getTopCtrl();
+            if (c) c.applyTheme(id);
+            else setPrefStr("exotic.theme.mode", id);
+            syncDocTokens();
+            renderActiveSection();
+          },
+        },
+        h("div", { className: "es-layout-title" }, title),
+        h("div", { className: "es-layout-sub" }, sub)
+      );
+
     return [
       h(
         "div",
@@ -799,41 +818,13 @@
       h("div", { className: "es-section-lbl" }, "Theme"),
       h(
         "div",
-        { className: "es-grid-2" },
-        h(
-          "button",
-          {
-            className: "es-layout-card",
-            type: "button",
-            "data-active": theme === "dark" ? "true" : "false",
-            onClick: () => {
-              const c = getTopCtrl();
-              if (c) c.applyTheme("dark");
-              else setPrefStr("exotic.theme.mode", "dark");
-              syncDocTokens();
-              renderActiveSection();
-            },
-          },
-          h("div", { className: "es-layout-title" }, "Dark"),
-          h("div", { className: "es-layout-sub" }, "Black (#000000) background with light text.")
-        ),
-        h(
-          "button",
-          {
-            className: "es-layout-card",
-            type: "button",
-            "data-active": theme === "light" ? "true" : "false",
-            onClick: () => {
-              const c = getTopCtrl();
-              if (c) c.applyTheme("light");
-              else setPrefStr("exotic.theme.mode", "light");
-              syncDocTokens();
-              renderActiveSection();
-            },
-          },
-          h("div", { className: "es-layout-title" }, "Light"),
-          h("div", { className: "es-layout-sub" }, "White (#FFFFFF) background with dark text.")
-        )
+        { className: "es-grid-3" },
+        themeCard("monochrome-dark", "Monochrome Dark", "Black (#000000) background · default"),
+        themeCard("monochrome-light", "Monochrome Light", "White (#FFFFFF) background"),
+        themeCard("ocean", "Ocean", "Deep teal & blue tones"),
+        themeCard("sunset", "Sunset", "Warm orange & purple glow"),
+        themeCard("forest", "Forest", "Rich greens & earth tones"),
+        themeCard("midnight", "Midnight", "Navy blue & slate"),
       ),
       h("div", { className: "es-section-lbl" }, "Interface"),
       h(

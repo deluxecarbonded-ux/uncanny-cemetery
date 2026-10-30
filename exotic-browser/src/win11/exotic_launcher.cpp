@@ -191,11 +191,9 @@ static bool ProvisionExoticProfile(const std::wstring& profileDir, const std::ws
 
         if (isFirstRun) {
             bool osLight = IsWindows11LightMode();
-            if (osLight) {
-                content += "user_pref(\"exotic.theme.mode\", \"light\");\n";
-            } else {
-                content += "user_pref(\"exotic.theme.mode\", \"dark\");\n";
-            }
+            content += "user_pref(\"exotic.theme.mode\", \"";
+            content += osLight ? "monochrome-light" : "monochrome-dark";
+            content += "\");\n";
         }
 
         fwrite(content.data(), 1, content.size(), fp);

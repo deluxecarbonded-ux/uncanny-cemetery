@@ -1175,9 +1175,9 @@
       { title: "Toggle auto-hide sidebar", hint: "Alt+B", run: () => ctrl.toggleCompactMode() },
       {
         title:
-          ctrl.getThemeMode() === "dark"
-            ? "Switch to Light theme"
-            : "Switch to Dark theme",
+          ctrl.getThemeMode() === "monochrome-light" || ctrl.getThemeMode() === "sunset"
+            ? "Switch to Dark theme"
+            : "Switch to Light theme",
         hint: "Alt+T",
         run: () => ctrl.toggleTheme(),
       },
@@ -1537,7 +1537,7 @@
       item("Downloads", "Ctrl+J", () => openSettingsSection("downloads")),
       item("Exotic Mods", "Alt+M", () => openSettingsSection("mods")),
       item(
-        mode === "dark" ? "Light theme" : "Dark theme",
+        mode === "monochrome-light" || mode === "sunset" ? "Dark theme" : "Light theme",
         "Alt+T",
         () => ctrl.toggleTheme()
       ),
@@ -1822,7 +1822,7 @@
     doc.documentElement.setAttribute("exotic-sharp", sharp ? "true" : "false");
     doc.documentElement.setAttribute("exotic-ghost-tabs", ghostTabs ? "true" : "false");
 
-    topThemeBtn.textContent = mode === "dark" ? "Light" : "Dark";
+    topThemeBtn.textContent = mode === "monochrome-light" || mode === "sunset" ? "Dark" : "Light";
     topSplitBtn.setAttribute("data-active", splitViewActive ? "true" : "false");
     topCompactBtn.setAttribute("data-active", compact ? "true" : "false");
 
