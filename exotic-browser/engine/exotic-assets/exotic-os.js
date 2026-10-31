@@ -873,6 +873,11 @@
       { d: "M6 7.5h7M6 10.5h7M6 12.5h7", stroke: "currentColor", "stroke-width": 1.2, "stroke-linecap": "round" },
       { tag: "circle", cx: 9.5, cy: 9.5, r: 0.9, fill: "currentColor" },
     ],
+    discord: [
+      { d: "M6.5 4.5C5 5.5 4 7.5 4 10.5c0 3 1.5 5 3.5 5 .8 0 1.5-.3 2-.8l.5-.7.5.7c.5.5 1.2.8 2 .8 2 0 3.5-2 3.5-5 0-3-1-5-2.5-6", stroke: "currentColor", "stroke-width": 1.4, fill: "none", "stroke-linejoin": "round" },
+      { tag: "circle", cx: 8, cy: 10, r: 1, fill: "currentColor" },
+      { tag: "circle", cx: 12, cy: 10, r: 1, fill: "currentColor" },
+    ],
   };
 
   function iconSVG(name, size) {
@@ -4458,6 +4463,63 @@ const isDir = entry.node.t === "d";
   // ---------------------------------------------------------------------------
   // About ExOS
   // ---------------------------------------------------------------------------
+function buildDiscordCanary(body, rec) {
+    const scroll = h("div", { className: "eos-scroll" });
+    body.appendChild(scroll);
+
+    scroll.appendChild(h("div", { className: "eos-sec-h" }, "Discord Canary"));
+    scroll.appendChild(h("div", { className: "eos-row" },
+      h("div", { className: "eos-row-l" },
+        h("div", { className: "eos-row-t" }, "Status"),
+        h("div", { className: "eos-row-s" }, "Connected \u2022 Voice & text channels ready")
+      )
+    ));
+
+    const channels = [
+      { name: "general", type: "text", unread: 3 },
+      { name: "voice-chat", type: "voice", unread: 0 },
+      { name: "gaming", type: "text", unread: 12 },
+      { name: "announcements", type: "text", unread: 1 },
+      { name: "memes", type: "text", unread: 0 },
+    ];
+
+    scroll.appendChild(h("div", { className: "eos-sec-h" }, "Channels"));
+    const chanList = h("div", { className: "eos-scroll", style: { maxHeight: "200px" } });
+    scroll.appendChild(chanList);
+
+    for (const ch of channels) {
+      const row = h("div", { className: "eos-row", style: { padding: "6px 0", borderBottom: "1px solid var(--eos-line)" } });
+      const info = h("div", { className: "eos-row-l" });
+      info.appendChild(h("div", { className: "eos-row-t" }, (ch.type === "voice" ? "\uD83D\uDD0A " : "# ") + ch.name));
+      info.appendChild(h("div", { className: "eos-row-s" }, ch.type === "voice" ? "Voice channel" : "Text channel" + (ch.unread ? " \u2022 " + ch.unread + " unread" : "")));
+      const btn = h("button", { className: "eos-btn", type: "button" }, ch.type === "voice" ? "Join" : "Open");
+      btn.addEventListener("click", () => {
+        const msg = ch.type === "voice" ? "Joined voice channel: " + ch.name : "Opened text channel: " + ch.name;
+        scroll.appendChild(h("div", { className: "eos-row-s", style: { padding: "4px 0", color: "var(--eos-oktext, #7fc98a)" } }, msg));
+      });
+      row.appendChild(info);
+      row.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, btn));
+      chanList.appendChild(row);
+    }
+
+    scroll.appendChild(h("div", { className: "eos-sec-h", style: { marginTop: "12px" } }, "Voice"));
+    const voiceRow = h("div", { className: "eos-row" });
+    voiceRow.appendChild(h("div", { className: "eos-row-l" }, h("div", { className: "eos-row-t" }, "Microphone"), h("div", { className: "eos-row-s" }, "Default input device")));
+    const micBtn = h("button", { className: "eos-btn", type: "button" }, "Mute");
+    micBtn.addEventListener("click", () => { micBtn.textContent = micBtn.textContent === "Mute" ? "Unmute" : "Mute"; });
+    voiceRow.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, micBtn));
+    scroll.appendChild(voiceRow);
+
+    const spkRow = h("div", { className: "eos-row" });
+    spkRow.appendChild(h("div", { className: "eos-row-l" }, h("div", { className: "eos-row-t" }, "Speakers"), h("div", { className: "eos-row-s" }, "Default output device")));
+    const spkBtn = h("button", { className: "eos-btn", type: "button" }, "Deafen");
+    spkBtn.addEventListener("click", () => { spkBtn.textContent = spkBtn.textContent === "Deafen" ? "Undeafen" : "Deafen"; });
+    spkRow.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, spkBtn));
+    scroll.appendChild(spkRow);
+
+    rec.refresh = () => {};
+  }
+
   function buildAbout(body) {
     const scroll = h("div", { className: "eos-scroll" });
     const seal = sealSVG(78);
@@ -4637,7 +4699,7 @@ const isDir = entry.node.t === "d";
     { id: "monitor", name: "System Monitor", desc: "CPU, memory, disk and processes", icon: "monitor", width: 660, height: 470, build: buildMonitor },
     { id: "hub", name: "System Hub", desc: "Hostname, appearance and storage", icon: "hub", width: 660, height: 470, build: buildHub },
     { id: "calc", name: "Calculator", desc: "Four functions, keyboard ready", icon: "calc", width: 320, height: 450, singleton: false, build: buildCalc },
-    { id: "about", name: "About ExOS", desc: "System and disk readout", icon: "about", width: 560, height: 430, build: buildAbout },
+    { id: "discord-canary", name: "Discord Canary", desc: "Chat, voice and video for gamers", icon: "discord", width: 900, height: 600, build: buildDiscordCanary },
     { id: "gnome-software", name: "GNOME Software", desc: "Install and manage applications", icon: "software", width: 800, height: 560, build: buildGnomeSoftware },
     { id: "kvm", name: "Virtual Machine Manager", desc: "KVM/QEMU virtual machines", icon: "kvm", width: 820, height: 560, build: buildKvmManager },
   ];
