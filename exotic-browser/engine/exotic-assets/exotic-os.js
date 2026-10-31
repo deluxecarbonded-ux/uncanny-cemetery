@@ -3073,7 +3073,9 @@
               const appsDir = HOME + "/.local/share/applications";
               let d = getNode(appsDir);
               if (!d) { mkdirNode(appsDir, true); d = getNode(appsDir); }
-              const desktop = "[Desktop Entry]\nType=Application\nName=" + name + "\nExec=" + name + "\nIcon=applications-system\nCategories=Application;\n";
+              const displayName = name === "gnome-software" ? "GNOME Software" : name === "discord-canary" ? "Discord Canary" : name;
+              const icon = name === "gnome-software" ? "software" : name === "discord-canary" ? "discord" : "applications-system";
+              const desktop = "[Desktop Entry]\nType=Application\nName=" + displayName + "\nExec=" + name + "\nIcon=" + icon + "\nCategories=Application;\n";
               writeFileNode(appsDir + "/" + name + ".desktop", desktop);
             } catch (_) {}
             c.print("Successfully installed " + name, "eos-oktext");
@@ -3119,7 +3121,9 @@
               const appsDir = HOME + "/.local/share/applications";
               let d = getNode(appsDir);
               if (!d) { mkdirNode(appsDir, true); d = getNode(appsDir); }
-              const desktop = "[Desktop Entry]\nType=Application\nName=" + name + "\nExec=" + name + "\nIcon=applications-system\nCategories=Application;\n";
+              const displayName = name === "gnome-software" ? "GNOME Software" : name === "discord-canary" ? "Discord Canary" : name;
+              const icon = name === "gnome-software" ? "software" : name === "discord-canary" ? "discord" : "applications-system";
+              const desktop = "[Desktop Entry]\nType=Application\nName=" + displayName + "\nExec=" + name + "\nIcon=" + icon + "\nCategories=Application;\n";
               writeFileNode(appsDir + "/" + name + ".desktop", desktop);
             } catch (_) {}
             c.print("Successfully installed " + name, "eos-oktext");
@@ -3238,12 +3242,14 @@
             if (!app) return c.print("usage: flatpak install <app>", "eos-err");
             c.print("Installing " + app + " from flathub...", "eos-dimtext");
             c.print(" " + app + " installed.", "eos-oktext");
-            try {
+try {
               const appsDir = HOME + "/.local/share/applications";
               let d = getNode(appsDir);
               if (!d) { mkdirNode(appsDir, true); d = getNode(appsDir); }
-              const desktop = "[Desktop Entry]\nType=Application\nName=" + app + "\nExec=" + app + "\nIcon=applications-system\nCategories=Application;\n";
-              writeFileNode(appsDir + "/" + app + ".desktop", desktop);
+              const displayName = pkg === "gnome-software" ? "GNOME Software" : pkg === "discord-canary" ? "Discord Canary" : pkg;
+              const icon = pkg === "gnome-software" ? "software" : pkg === "discord-canary" ? "discord" : "applications-system";
+              const desktop = "[Desktop Entry]\nType=Application\nName=" + displayName + "\nExec=" + pkg + "\nIcon=" + icon + "\nCategories=Application;\n";
+              writeFileNode(appsDir + "/" + pkg + ".desktop", desktop);
             } catch (_) {}
             refreshAll();
             return;
@@ -3810,11 +3816,42 @@
           const nameMatch = content.match(/^Name=(.+)$/m);
           const appName = (nameMatch && nameMatch[1].trim()) || name.replace(/\.desktop$/i, "");
           const exec = execMatch ? execMatch[1].trim() : appName;
+
+          // Launch known apps as real windows
+          if (exec === "gnome-software" || appName.toLowerCase().includes("gnome software")) {
+            openApp("terminal", { path: null });
+            // Show package manager in terminal
+            const win = Array.from(openWindows.values()).filter(w => w.id === "terminal").pop();
+            if (win && win.body) {
+              // Just open terminal, user can run apt
+            }
+            return;
+          }
+          if (exec === "discord-canary" || appName.toLowerCase().includes("discord")) {
+            // Open Discord Canary as a web view window
+            createWindow({
+              id: "discord-canary",
+              icon: "discord",
+              title: "Discord Canary",
+              width: 900,
+              height: 600,
+              build: (body, rec) => {
+                const iframe = document.createElement("iframe");
+                iframe.src = "https://discord.com/app";
+                iframe.style.width = "100%";
+                iframe.style.height = "100%";
+                iframe.style.border = "none";
+                body.appendChild(iframe);
+              },
+            });
+            return;
+          }
+
           openModalDialog({
             title: appName,
             desc: "Launching " + appName + " (" + exec + ")",
             okLabel: "Launch",
-            onOk: () => { c.print && c.print("Launched " + appName, "eos-oktext"); },
+            onOk: () => {},
           });
         } catch (_) {
           openApp("editor", { path: target });
@@ -4463,63 +4500,6 @@ const isDir = entry.node.t === "d";
   // ---------------------------------------------------------------------------
   // About ExOS
   // ---------------------------------------------------------------------------
-function buildDiscordCanary(body, rec) {
-    const scroll = h("div", { className: "eos-scroll" });
-    body.appendChild(scroll);
-
-    scroll.appendChild(h("div", { className: "eos-sec-h" }, "Discord Canary"));
-    scroll.appendChild(h("div", { className: "eos-row" },
-      h("div", { className: "eos-row-l" },
-        h("div", { className: "eos-row-t" }, "Status"),
-        h("div", { className: "eos-row-s" }, "Connected \u2022 Voice & text channels ready")
-      )
-    ));
-
-    const channels = [
-      { name: "general", type: "text", unread: 3 },
-      { name: "voice-chat", type: "voice", unread: 0 },
-      { name: "gaming", type: "text", unread: 12 },
-      { name: "announcements", type: "text", unread: 1 },
-      { name: "memes", type: "text", unread: 0 },
-    ];
-
-    scroll.appendChild(h("div", { className: "eos-sec-h" }, "Channels"));
-    const chanList = h("div", { className: "eos-scroll", style: { maxHeight: "200px" } });
-    scroll.appendChild(chanList);
-
-    for (const ch of channels) {
-      const row = h("div", { className: "eos-row", style: { padding: "6px 0", borderBottom: "1px solid var(--eos-line)" } });
-      const info = h("div", { className: "eos-row-l" });
-      info.appendChild(h("div", { className: "eos-row-t" }, (ch.type === "voice" ? "\uD83D\uDD0A " : "# ") + ch.name));
-      info.appendChild(h("div", { className: "eos-row-s" }, ch.type === "voice" ? "Voice channel" : "Text channel" + (ch.unread ? " \u2022 " + ch.unread + " unread" : "")));
-      const btn = h("button", { className: "eos-btn", type: "button" }, ch.type === "voice" ? "Join" : "Open");
-      btn.addEventListener("click", () => {
-        const msg = ch.type === "voice" ? "Joined voice channel: " + ch.name : "Opened text channel: " + ch.name;
-        scroll.appendChild(h("div", { className: "eos-row-s", style: { padding: "4px 0", color: "var(--eos-oktext, #7fc98a)" } }, msg));
-      });
-      row.appendChild(info);
-      row.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, btn));
-      chanList.appendChild(row);
-    }
-
-    scroll.appendChild(h("div", { className: "eos-sec-h", style: { marginTop: "12px" } }, "Voice"));
-    const voiceRow = h("div", { className: "eos-row" });
-    voiceRow.appendChild(h("div", { className: "eos-row-l" }, h("div", { className: "eos-row-t" }, "Microphone"), h("div", { className: "eos-row-s" }, "Default input device")));
-    const micBtn = h("button", { className: "eos-btn", type: "button" }, "Mute");
-    micBtn.addEventListener("click", () => { micBtn.textContent = micBtn.textContent === "Mute" ? "Unmute" : "Mute"; });
-    voiceRow.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, micBtn));
-    scroll.appendChild(voiceRow);
-
-    const spkRow = h("div", { className: "eos-row" });
-    spkRow.appendChild(h("div", { className: "eos-row-l" }, h("div", { className: "eos-row-t" }, "Speakers"), h("div", { className: "eos-row-s" }, "Default output device")));
-    const spkBtn = h("button", { className: "eos-btn", type: "button" }, "Deafen");
-    spkBtn.addEventListener("click", () => { spkBtn.textContent = spkBtn.textContent === "Deafen" ? "Undeafen" : "Deafen"; });
-    spkRow.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, spkBtn));
-    scroll.appendChild(spkRow);
-
-    rec.refresh = () => {};
-  }
-
   function buildAbout(body) {
     const scroll = h("div", { className: "eos-scroll" });
     const seal = sealSVG(78);
@@ -4570,75 +4550,6 @@ function buildDiscordCanary(body, rec) {
   // ---------------------------------------------------------------------------
   // App registry
   // ---------------------------------------------------------------------------
-  function buildGnomeSoftware(body, rec) {
-    const scroll = h("div", { className: "eos-scroll" });
-    body.appendChild(scroll);
-
-    scroll.appendChild(h("div", { className: "eos-sec-h" }, "GNOME Software"));
-    const search = h("input", { className: "eos-input", type: "text", placeholder: "Search applications...", spellcheck: "false" });
-    scroll.appendChild(h("div", { className: "eos-row" }, h("div", { className: "eos-row-l" }, h("div", { className: "eos-row-t" }, "Search"), search)));
-
-    const categories = ["All", "Development", "Graphics", "Internet", "Office", "System", "Games"];
-    let currentCat = "All";
-    const catBar = h("div", { className: "eos-chips", style: { display: "flex", gap: "6px", overflowX: "auto", paddingBottom: "8px" } });
-    categories.forEach((cat) => {
-      const btn = h("button", { className: "eos-chip", type: "button", "data-on": cat === currentCat ? "true" : "false", onClick: () => { currentCat = cat; renderList(); } }, cat);
-      catBar.appendChild(btn);
-    });
-    scroll.appendChild(catBar);
-
-    const pkgs = [
-      { id: "gedit", name: "gedit", desc: "Text editor", cat: "Office", ver: "46.0", size: "2.1 MiB", inst: false },
-      { id: "firefox", name: "Firefox", desc: "Web browser", cat: "Internet", ver: "128.0", size: "85 MiB", inst: true },
-      { id: "gimp", name: "GIMP", desc: "Image editor", cat: "Graphics", ver: "2.10", size: "45 MiB", inst: false },
-      { id: "libreoffice", name: "LibreOffice", desc: "Office suite", cat: "Office", ver: "24.2", size: "310 MiB", inst: false },
-      { id: "vlc", name: "VLC", desc: "Media player", cat: "System", ver: "3.0", size: "42 MiB", inst: false },
-      { id: "gnome-builder", name: "GNOME Builder", desc: "Integrated development environment", cat: "Development", ver: "46.0", size: "120 MiB", inst: false },
-      { id: "evince", name: "Evince", desc: "Document viewer", cat: "Office", ver: "46.0", size: "18 MiB", inst: false },
-      { id: "gnome-games", name: "Games", desc: "Game manager", cat: "Games", ver: "46.0", size: "90 MiB", inst: false },
-    ];
-
-    const list = h("div", { className: "eos-scroll" });
-    scroll.appendChild(list);
-
-    function renderList() {
-      clearEl(list);
-      const q = String(search.value || "").toLowerCase();
-      const filtered = pkgs.filter(p => (currentCat === "All" || p.cat === currentCat) && (p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)));
-      if (!filtered.length) {
-        list.appendChild(h("div", { className: "eos-empty", style: { height: "64px" } }, "No matching applications"));
-        return;
-      }
-      for (const p of filtered) {
-        const row = h("div", { className: "eos-row", style: { padding: "6px 0", borderBottom: "1px solid var(--eos-line)" } });
-        const info = h("div", { className: "eos-row-l" });
-        info.appendChild(h("div", { className: "eos-row-t" }, p.name));
-        info.appendChild(h("div", { className: "eos-row-s" }, p.desc + "  \u2022  v" + p.ver + "  \u2022  " + p.size));
-        const btn = h("button", { className: "eos-btn" + (p.inst ? " eos-btn-ghost" : ""), type: "button", disabled: p.inst }, p.inst ? "Installed" : "Install");
-        if (!p.inst) {
-          const onInstallClick = () => {
-            btn.disabled = true;
-            btn.textContent = "Installing\u2026";
-            setTimeout(() => {
-              p.inst = true;
-              btn.textContent = "Installed";
-              btn.className = "eos-btn eos-btn-ghost";
-              btn.disabled = true;
-            }, 900);
-          };
-          btn.addEventListener("click", onInstallClick);
-        }
-        row.appendChild(info);
-        row.appendChild(h("div", { style: { display: "flex", gap: "8px" } }, btn));
-        list.appendChild(row);
-      }
-    }
-
-    search.addEventListener("input", renderList);
-    renderList();
-    rec.refresh = renderList;
-  }
-
   function buildKvmManager(body, rec) {
     const scroll = h("div", { className: "eos-scroll" });
     body.appendChild(scroll);
@@ -4699,8 +4610,6 @@ function buildDiscordCanary(body, rec) {
     { id: "monitor", name: "System Monitor", desc: "CPU, memory, disk and processes", icon: "monitor", width: 660, height: 470, build: buildMonitor },
     { id: "hub", name: "System Hub", desc: "Hostname, appearance and storage", icon: "hub", width: 660, height: 470, build: buildHub },
     { id: "calc", name: "Calculator", desc: "Four functions, keyboard ready", icon: "calc", width: 320, height: 450, singleton: false, build: buildCalc },
-    { id: "discord-canary", name: "Discord Canary", desc: "Chat, voice and video for gamers", icon: "discord", width: 900, height: 600, build: buildDiscordCanary },
-    { id: "gnome-software", name: "GNOME Software", desc: "Install and manage applications", icon: "software", width: 800, height: 560, build: buildGnomeSoftware },
     { id: "kvm", name: "Virtual Machine Manager", desc: "KVM/QEMU virtual machines", icon: "kvm", width: 820, height: 560, build: buildKvmManager },
   ];
 
