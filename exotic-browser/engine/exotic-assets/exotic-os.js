@@ -675,7 +675,7 @@
         "exos-release": f("ExOS build 20261030.1 · kernel " + KERNEL + "\n"),
       }),
       home: d({
-        exo: d({
+        [USER]: d({
           ".profile": f('export SHELL=/bin/exsh\nexport EDITOR=nano\nexport PS1="\\u@\\h:\\w$ "\n'),
           "README.txt": f(
             "ExOS " +
