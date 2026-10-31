@@ -1,0 +1,37 @@
+#include <windows.h>
+
+// Application Icon (Monochrome Exotic Emblem)
+1 ICON "../../assets/exotic.ico"
+
+// Windows 11 PerMonitorV2 & SegmentHeap Manifest
+1 RT_MANIFEST "exotic.manifest"
+
+// PE64 Version Metadata — Zero Legacy References
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     1,0,0,159
+PRODUCTVERSION  1,0,0,159
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       0x0L
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      "Exotic Project\0"
+            VALUE "FileDescription",  "Exotic Web Browser for Windows 11\0"
+            VALUE "FileVersion",      "1.0.0.159\0"
+            VALUE "InternalName",     "Exotic.exe\0"
+            VALUE "LegalCopyright",   "Exotic Project (MPL 2.0)\0"
+            VALUE "OriginalFilename", "Exotic.exe\0"
+            VALUE "ProductName",      "Exotic\0"
+            VALUE "ProductVersion",   "1.0.0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END
