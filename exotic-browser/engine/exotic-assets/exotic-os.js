@@ -1351,6 +1351,55 @@
     color: var(--eos-dim);
   }
 
+/* ---------- desktop icons ---------- */
+  #exotic-os .eos-desktop-icons {
+    position: absolute;
+    left: 16px;
+    top: 52px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    pointer-events: auto;
+  }
+  #exotic-os .eos-desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 72px;
+    padding: 8px 4px;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--eos-fg);
+    cursor: pointer;
+    text-align: center;
+  }
+  #exotic-os .eos-desktop-icon:hover { background-color: rgba(255, 255, 255, 0.08); }
+  #exotic-os[data-scheme="bone"] .eos-desktop-icon:hover { background-color: rgba(0, 0, 0, 0.06); }
+  #exotic-os[data-scheme="rice"] .eos-desktop-icon:hover { background-color: rgba(42, 36, 25, 0.08); }
+  #exotic-os[data-scheme="material"] .eos-desktop-icon:hover { background-color: rgba(255, 255, 255, 0.10); }
+  #exotic-os .eos-desktop-icon .eos-dicon-img {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: var(--eos-panel-2);
+    color: var(--eos-accent);
+  }
+  #exotic-os .eos-desktop-icon .eos-dicon-label {
+    font-size: 11px;
+    color: var(--eos-fg);
+    word-break: break-word;
+    line-height: 1.2;
+    max-width: 68px;
+  }
+
   /* ---------- windows ---------- */
   #exotic-os .eos-wins {
     position: absolute;
@@ -1853,7 +1902,7 @@
   let splashFill = null;
   let splashSub = null;
   let stageEl = null;
-  let winsLayer = null;
+  let desktopIconsEl = null;
   let tasksEl = null;
   let barTitleEl = null;
   let clockEl = null;
@@ -2292,6 +2341,54 @@
     if (powerMenuEl) powerMenuEl.setAttribute("data-open", powerOpen ? "true" : "false");
   }
 
+function renderDesktopIcons() {
+    if (!desktopIconsEl) return;
+    clearEl(desktopIconsEl);
+    const appsDir = HOME + "/.local/share/applications";
+    const dir = getNode(appsDir);
+    if (!dir || dir.t !== "d") return;
+    for (const name of Object.keys(dir.c).sort()) {
+      const node = dir.c[name];
+      if (node.t !== "f" || !name.endsWith(".desktop")) continue;
+      const content = node.d || "";
+      const nameMatch = content.match(/^Name=(.+)$/m);
+      const execMatch = content.match(/^Exec=(.+)$/m);
+      const iconMatch = content.match(/^Icon=(.+)$/m);
+      const appName = (nameMatch && nameMatch[1].trim()) || name.replace(/\.desktop$/, "");
+      const exec = (execMatch && execMatch[1].trim()) || appName;
+      const iconName = (iconMatch && iconMatch[1].trim()) || "about";
+      const icon = h("span", { className: "eos-dicon-img" }, iconSVG(iconName, 22));
+      const label = h("span", { className: "eos-dicon-label" }, appName);
+      const btn = h("button", { className: "eos-desktop-icon", type: "button" }, icon, label);
+      btn.addEventListener("dblclick", () => {
+        // Launch the app
+        const lower = exec.toLowerCase();
+        if (lower === "gnome-software") {
+          openApp("terminal");
+        } else if (lower === "discord-canary") {
+          createWindow({
+            id: "discord-canary",
+            icon: "discord",
+            title: "Discord Canary",
+            width: 900,
+            height: 600,
+            build: (body, rec) => {
+              const iframe = document.createElement("iframe");
+              iframe.src = "https://discord.com/app";
+              iframe.style.width = "100%";
+              iframe.style.height = "100%";
+              iframe.style.border = "none";
+              body.appendChild(iframe);
+            },
+          });
+        } else {
+          openModalDialog({ title: appName, desc: "Launching " + appName + " (" + exec + ")", okLabel: "Launch" });
+        }
+      });
+      desktopIconsEl.appendChild(btn);
+    }
+  }
+
   function applyVisualPrefs() {
     if (!displayEl) return;
     displayEl.setAttribute("data-scheme", scheme());
@@ -2306,6 +2403,7 @@
       if (getBool(PREF_WIDGET, true)) widgetEl.removeAttribute("hidden");
       else widgetEl.setAttribute("hidden", "true");
     }
+    renderDesktopIcons();
   }
 
   // ---------------------------------------------------------------------------
@@ -2559,6 +2657,7 @@
     );
 
     winsLayer = h("div", { className: "eos-wins" });
+    desktopIconsEl = h("div", { className: "eos-desktop-icons" });
     modalEl = h("div", { className: "eos-modal", "data-open": "false" });
     haltEl = h(
       "div",
@@ -2576,8 +2675,9 @@
         { className: "eos-wall", "data-wall": wallpaper() },
         h("div", { className: "eos-wall-mark" }, "力")
       ),
-      widgetEl,
-      winsLayer,
+widgetEl,
+       desktopIconsEl,
+       winsLayer,
       barEl,
       launcherEl,
       modalEl,
@@ -3669,6 +3769,7 @@ try {
 
   function refreshAll() {
     renderBarDisk();
+    renderDesktopIcons();
     for (const w of openWindows.values()) {
       if (typeof w.refresh === "function") {
         try {
