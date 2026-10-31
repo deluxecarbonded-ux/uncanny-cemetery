@@ -715,6 +715,14 @@
           }),
           Downloads: d({}),
           ".bashrc": f("alias ll='ls -l'\nalias ..='cd ..'\n"),
+          ".local": d({
+            share: d({
+              applications: d({
+                "gnome-software.desktop": f("[Desktop Entry]\nType=Application\nName=GNOME Software\nExec=gnome-software\nIcon=software\nCategories=Application;\n"),
+                "discord-canary.desktop": f("[Desktop Entry]\nType=Application\nName=Discord Canary\nExec=discord-canary\nIcon=discord\nCategories=Application;\n"),
+              }),
+            }),
+          }),
         }),
       }),
       mnt: d({}),
